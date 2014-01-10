@@ -28,6 +28,7 @@ namespace Ubiquitous
         private WaveOut output;
 
         private Stream outputStream;
+        private Stream responseStream;
 
         private Stream fileStream;
 
@@ -42,7 +43,7 @@ namespace Ubiquitous
 
         public void Stream( )
         {
-            encoder.WriteHeader(outputStream);
+            encoder.WriteHeader( outputStream );
 
             capture.StartRecording();
             output.Play();
@@ -82,7 +83,7 @@ namespace Ubiquitous
                 System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes( "source:" + password));
 
             client.Method = "SOURCE";
-            client.ContentType = "audio/mpeg";
+            client.ContentType = "audio/ogg";
             client.Headers.Add("Authorization", "Basic " + encodedPassword );
             client.Headers.Add("ice-name", "Ubiquitous Sound " + outPoint );
             client.Headers.Add("ice-url", outURL );
@@ -95,14 +96,18 @@ namespace Ubiquitous
             client.SendChunked = true;
             client.KeepAlive = true;
 
-            Stream output = client.GetRequestStream();            
+            Stream output = client.GetRequestStream();
+
+            //HttpWebResponse response = (HttpWebResponse) client.GetResponse();
+            //responseStream = response.GetResponseStream();
+
             return output;
         }
 
         private void SendCaptureSample( object sender, WaveInEventArgs e )
         {
-            encoder.WriteAudio( outputStream, e.Buffer, e.BytesRecorded);
-            buffer.AddSamples(e.Buffer, 0, e.BytesRecorded);
+            encoder.WriteAudio(outputStream, e.Buffer, e.BytesRecorded);
+            //buffer.AddSamples(e.Buffer, 0, e.BytesRecorded);
 
             WaveDataMicHandler handler = WaveDataMicEvent;
 
