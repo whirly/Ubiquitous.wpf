@@ -20,6 +20,7 @@
  */
 
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace Xiph.Interop.Vorbis
@@ -93,6 +94,7 @@ namespace Xiph.Interop.Vorbis
 						this.vorbis_dsp_state.vi, typeof(vorbis_info));
 					this.changed = false;
 				}
+
 				return this.vi;
 			}
 		}

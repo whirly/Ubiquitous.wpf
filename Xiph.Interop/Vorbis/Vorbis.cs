@@ -21,8 +21,8 @@
 
 using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
-
 using Xiph.Interop.Ogg;
 
 namespace Xiph.Interop.Vorbis
@@ -281,10 +281,10 @@ namespace Xiph.Interop.Vorbis
             for( int i = 0; i < v.Vi.Channels; i++ )
             {
                 IntPtr ptr = (IntPtr)memory[i];
-                Marshal.Copy( buffer[i], 0, ptr, vals);
+                Marshal.Copy( buffer[i], 0, ptr, vals / 2);
             }
 
-            int retval = vorbis_analysis_wrote(ref v.vorbis_dsp_state, vals);
+            int retval = vorbis_analysis_wrote(ref v.vorbis_dsp_state, vals / 2);
             v.changed = true;
             return retval;
         }

@@ -8,6 +8,7 @@ using System.IO;
 using Xiph.Interop.Ogg;
 using Xiph.Interop.Vorbis;
 using Xiph.Interop.VorbisEncode;
+using System.Diagnostics;
 
 namespace Ubiquitous
 {
@@ -66,6 +67,10 @@ namespace Ubiquitous
 
             // First we must transcribe our PCM data into an array of float.
             float[][] processingBuffer = Vorbis.AnalysisBuffer(vDspState, bufferLen / 4);
+            if (vDspState.Vi.Rate != 44100)
+            {
+                Debugger.Break();
+            }
 
             for (int i = 0; i < bufferLen / 4; i++)
             {
@@ -79,11 +84,13 @@ namespace Ubiquitous
             {
                 Vorbis.Analysis(vBlock, null);
                 VorbisBitrate.Addblock(vBlock);
+
                 analysis++;
 
                 while (VorbisBitrate.Flushpacket(vDspState, packet) > 0 )
                 {
                     OggStreamState.Packetin(oggStreamState, packet);
+
                     packet_in++;
 
                     while (OggStreamState.Pageout(oggStreamState, oggPage) > 0)
