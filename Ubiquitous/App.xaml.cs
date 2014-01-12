@@ -19,8 +19,10 @@ namespace Ubiquitous
 
             if( e.Args.Count() == 4 )
             {
-                Icecast caster = new Icecast(e.Args[0], e.Args[1], e.Args[2], e.Args[3]);
-                caster.Stream();
+                UbiquitousWindow window = new UbiquitousWindow();
+                window.SetFromCommandLine(e.Args[0], e.Args[1], e.Args[2], e.Args[3]);
+                window.Show();
+                window.Start();
             }
         }
     }

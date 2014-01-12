@@ -24,27 +24,12 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ogg\ogg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ogg\os_types.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vorbis\codec.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vorbis\vorbisenc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vorbis\vorbisfile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MyVorbisEncoder.h">
+    <ClInclude Include="VorbisDecoder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MyVorbisEncoder.c">
+    <ClCompile Include="VorbisDecoder.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.c">

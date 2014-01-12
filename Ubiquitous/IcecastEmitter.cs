@@ -14,68 +14,29 @@ namespace Ubiquitous
     // Signature for event
     public delegate void WaveDataMicHandler(object sender, WaveInEventArgs e);
 
-    class Icecast
+    class IcecastEmitter
     {
         // Event available
         public event WaveDataMicHandler WaveDataMicEvent;
 
         // Capture data
-        private BufferedWaveProvider buffer;
         private WaveIn capture;
-        VorbisEncoder encoder = new VorbisEncoder(2, 44100, 0.6F);
+        private VorbisEncoder encoder; 
         
         // Output data
-        private WaveOut output;
-
         private Stream outputStream;
-        private Stream responseStream;
 
-        private Stream fileStream;
-
-        public Icecast( String server, String inPoint, String outPoint, String password )
+        public IcecastEmitter()
         {
-            outputStream = InitializeOutStream( server, outPoint, password );
-            //fileStream = File.Open("machin.ogg", FileMode.Create);
-            
+        }
+
+        public bool OpenStream( String server, String outPoint, String password )
+        {
+            // Create the encoder and initialize the capture of the mic
+            encoder = new VorbisEncoder(2, 44100, 0.6F);
             capture = InitializeCapture();
-            output = InitializeOutput();
-        }
 
-        public void Stream( )
-        {
-            encoder.WriteHeader( outputStream );
-
-            capture.StartRecording();
-            output.Play();
-        }
-
-        private WaveIn InitializeCapture()
-        {
-            WaveIn capture = new WaveIn();
-            capture.WaveFormat = new WaveFormat(44100, 2);
-            capture.BufferMilliseconds = 1000;
-            capture.DataAvailable += new EventHandler<WaveInEventArgs>(SendCaptureSample);
-
-            return capture;
-        }
-
-        private WaveOut InitializeOutput()
-        {
-            WaveOut output = new WaveOut();
-            buffer = new BufferedWaveProvider(capture.WaveFormat);
-
-            output.Init(buffer);
-
-            return output;
-        }
-
-        private Stream InitializeInStream(String server, String inPoint )
-        {
-            return null;
-        }        
-
-        private Stream InitializeOutStream( String server, String outPoint, String password )
-        {           
+            // Open the stream to the server
             String outURL = "http://" + server + "/" + outPoint + ".ogg";
             HttpWebRequest client = (HttpWebRequest) WebRequest.Create( outURL );
 
@@ -96,19 +57,18 @@ namespace Ubiquitous
             client.SendChunked = true;
             client.KeepAlive = true;
 
-            Stream output = client.GetRequestStream();
+            outputStream = client.GetRequestStream();
 
-            //HttpWebResponse response = (HttpWebResponse) client.GetResponse();
-            //responseStream = response.GetResponseStream();
+            // We start to write the header on the server
+            encoder.WriteHeader(outputStream);
+            capture.StartRecording();
 
-            return output;
+            return true;
         }
 
         private void SendCaptureSample( object sender, WaveInEventArgs e )
         {
             encoder.WriteAudio(outputStream, e.Buffer, e.BytesRecorded);
-            //buffer.AddSamples(e.Buffer, 0, e.BytesRecorded);
-
             WaveDataMicHandler handler = WaveDataMicEvent;
 
             if( handler != null )
@@ -116,5 +76,16 @@ namespace Ubiquitous
                 handler(this, e);
             }
         }
+        private WaveIn InitializeCapture()
+        {
+            WaveIn capture = new WaveIn();
+            capture.WaveFormat = new WaveFormat(44100, 2);
+            capture.BufferMilliseconds = 1000;
+            capture.DataAvailable += new EventHandler<WaveInEventArgs>(SendCaptureSample);
+
+            return capture;
+        }
+
+
     }
 }

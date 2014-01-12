@@ -73,8 +73,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="IcecastReceiver.cs" />
+    <Compile Include="VorbisDecoder.cs" />
     <Compile Include="VorbisEncoder.cs" />
-    <Page Include="MainWindow.xaml">
+    <Page Include="UbiquitousWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -82,9 +84,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Icecast.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="IcecastEmitter.cs" />
+    <Compile Include="UbiquitousWindow.xaml.cs">
+      <DependentUpon>UbiquitousWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
